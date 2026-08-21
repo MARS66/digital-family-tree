@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+tmp/
+.cache/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+
+# WeChat developer tools
+miniprogram_npm/

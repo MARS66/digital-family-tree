@@ -1,0 +1,126 @@
+# API 设计草案
+
+## 1. 约定
+
+- 前缀 `/api/v1`，JSON；ID 为 UUID；分页使用 cursor。
+- Header：`Authorization: Bearer ...`、写请求 `Idempotency-Key`、更新携带 `If-Match` 或 `expectedVersion`。
+- 成功响应：`{ data, meta? }`；错误：`{ error: { code, message, details?, traceId } }`。
+- 常用状态：400 校验失败、401 未登录、403 无权、404 不存在或不可披露、409 版本/重复/关系冲突、422 业务规则、429 限流。
+- 后端按 Family 租户、资源范围、字段隐私过滤；禁止客户端自行裁剪敏感数据。
+
+## 2. 认证
+
+- `POST /auth/wechat/login`：输入 `{ code }`；输出 `{ accessToken, refreshToken, user, families }`。
+- `POST /auth/refresh`：轮换会话。
+- `POST /auth/logout`：撤销当前会话。
+- `GET /me`：账号、家族成员身份和已批准认领摘要。
+
+## 3. Family 与成员
+
+- `POST /families`：`{ name, description?, firstPerson?, claimSelf? }`；原子创建 Family、Membership、可选 Person/Claim。已登录。
+- `GET /families/:familyId`：返回按权限过滤的摘要。
+- `PATCH /families/:familyId`：配置更新；管理员，需版本。
+- `GET /families/:familyId/stats`：人数、关系、贡献、分支完成度。
+- `GET /families/:familyId/members?cursor=`：分页成员。
+- `PATCH /families/:familyId/members/:membershipId`：角色/状态；管理员。
+
+## 4. Person 与视图
+
+- `POST /families/:familyId/persons`：提交候选或由管理员建草稿；输入 `{ person, source?, contributionId? }`。
+- `GET /families/:familyId/persons/:personId`：字段过滤后的详情；合并对象返回 canonical ID。
+- `PATCH /families/:familyId/persons/:personId`：默认创建 ContributionItem，不直接覆盖正式事实。
+- `GET /families/:familyId/persons/search?q=&branchId=&cursor=`：模糊搜索；仅返回可见摘要。
+- `GET /families/:familyId/persons/:personId/view?mode=self|ancestors|descendants&depth=`：局部图 DTO `{ nodes, edges, hiddenNodeCount, nextCursors }`。
+- `POST /families/:familyId/placeholders/:personId/resolve`：补全或提出合并；管理员/贡献流程。
+
+## 5. Relationship / PartnerUnion
+
+- `POST /families/:familyId/relationships/validate`：输入候选边，输出重复、循环、代际冲突预检；结果不保证审核时仍有效。
+- `POST /families/:familyId/contributions/:id/relationships`：添加亲子候选 `{ parentId, childId, parentRole, sourceId? }`。
+- `DELETE /families/:familyId/contributions/:id/relationships/:relationshipId`：提出删除。
+- `POST /families/:familyId/contributions/:id/unions`：伴侣候选 `{ person1Id, person2Id, unionType, dates?, sourceId? }`。
+- `GET /families/:familyId/persons/:personId/relations`：经权限过滤的直接和推导关系。
+
+## 6. Claim
+
+- `POST /families/:familyId/claims`：`{ personId, statement?, sourceId? }`；占位不可认领。
+- `GET /families/:familyId/claims?status=&cursor=`：管理员范围队列。
+- `GET /me/claims`：跨家族认领。
+- `POST /families/:familyId/claims/:id/review`：`{ decision, comment? }`；管理员。
+- `POST /families/:familyId/claims/:id/revoke`：本人请求或管理员处置，写审计。
+
+## 7. Contribution / Review
+
+- `POST /families/:familyId/contributions`：创建草稿。
+- `GET/PATCH /families/:familyId/contributions/:id`：读取/保存草稿，需版本。
+- `POST /families/:familyId/contributions/:id/items`：添加变更项，`clientItemKey` 幂等。
+- `POST /families/:familyId/contributions/:id/submit`：冻结提交并运行校验。
+- `POST /families/:familyId/contributions/:id/withdraw`：审核决定前撤回。
+- `GET /families/:familyId/reviews?status=&branchId=&risk=&cursor=`：审核队列。
+- `GET /families/:familyId/reviews/:id`：差异、来源、冲突和影响。
+- `POST /families/:familyId/reviews/:id/decision`：`{ decision, comment, expectedSubjectVersion }`；批准时原子生效并返回 revision。
+
+## 8. Invitation 与 Branch
+
+- `POST /families/:familyId/invitations`：`{ type, branchId?, personId?, expiresAt, maxUses? }`；输出一次性明文 token、分享路径、二维码资源。
+- `GET /invitations/:token/preview`：最小上下文，不泄露敏感字段。
+- `POST /invitations/:token/accept`：登录后加入/进入上下文；幂等。
+- `POST /families/:familyId/invitations/:id/revoke`。
+- `POST/GET /families/:familyId/branches`。
+- `GET/PATCH /families/:familyId/branches/:branchId`。
+- `POST /families/:familyId/branches/:branchId/admins`；家族管理员。
+
+## 9. Import
+
+- `GET /families/:familyId/imports/template?format=xlsx`：下载版本化模板。
+- `POST /families/:familyId/imports`：先取得上传凭证或关联已上传 Media，创建 ImportJob。
+- `POST /families/:familyId/imports/:id/mapping`：保存列映射并解析。
+- `GET /families/:familyId/imports/:id`：状态、摘要、错误计数。
+- `GET /families/:familyId/imports/:id/rows?status=&cursor=`：分页候选与错误。
+- `POST /families/:familyId/imports/:id/decisions`：批量但逐行记录 `{ rowId, decision, targetPersonId? }`。
+- `POST /families/:familyId/imports/:id/confirm`：生成 Contribution，仍需审核。
+- `POST /families/:familyId/imports/:id/cancel`。
+
+## 10. Merge 与质量
+
+- `GET /families/:familyId/duplicates?status=&cursor=`。
+- `POST /families/:familyId/duplicates/scan`：管理员触发限流任务。
+- `POST /families/:familyId/merges/preview`：`{ survivorId, mergedId }`；返回字段/关系/认领冲突和阻断项。
+- `POST /families/:familyId/merges`：带预览版本和理由，创建高风险审核对象。
+- `POST /families/:familyId/merges/:id/approve`：执行事务合并；家族管理员。
+- `POST /families/:familyId/merges/:id/reverse`：生成反向修订，只有可安全恢复时允许。
+
+## 11. Source、Media、History 与 Privacy
+
+- `POST/GET /families/:familyId/sources`；详情按权限过滤附件。
+- `POST /families/:familyId/media/upload-intents`；返回 COS 临时上传信息。
+- `POST /families/:familyId/media/:id/complete`；校验哈希/类型后转 READY。
+- `GET /families/:familyId/history?entityType=&entityId=&cursor=`。
+- `GET/PATCH /families/:familyId/persons/:personId/privacy`；本人或管理员，扩大范围需明确确认。
+
+## 12. 代表性输入输出
+
+创建亲子候选：
+
+```json
+{
+  "parentId": "uuid-parent",
+  "childId": "uuid-child",
+  "parentRole": "FATHER",
+  "sourceId": "uuid-source",
+  "clientItemKey": "mobile-42"
+}
+```
+
+冲突响应：
+
+```json
+{
+  "error": {
+    "code": "RELATIONSHIP_CYCLE",
+    "message": "该关系会形成祖先循环",
+    "details": { "pathPersonIds": ["uuid-child", "...", "uuid-parent"] },
+    "traceId": "trace-id"
+  }
+}
+```

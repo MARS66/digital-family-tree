@@ -1,0 +1,13 @@
+{
+  "name": "@digital-family-tree/miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@digital-family-tree/contracts": "0.1.0"
+  }
+}
