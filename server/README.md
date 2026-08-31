@@ -20,6 +20,14 @@ npm run dev:server
 - 生产环境必须设置 `WECHAT_LOGIN_PROVIDER=wechat`、`WECHAT_APP_ID` 和 `WECHAT_APP_SECRET`；生产模式禁止 fake provider。
 - token 仅在创建时返回明文，数据库只保存 SHA-256 哈希。
 
+## Family 与 Membership
+
+- `POST /api/v1/families`：登录用户创建 Family，并在同一事务内成为 `OWNER/ACTIVE` 成员。
+- `GET /api/v1/families/:familyId`：读取当前有效成员可见的 Family 摘要。
+- 非成员与不可见 Family 统一返回 404，避免通过接口探测 Family 是否存在。
+- 登录响应的 `families` 返回当前用户所有有效 Family Membership 摘要。
+- T011 尚不包括 Person、邀请加入、角色变更、所有权移交或完整权限引擎。
+
 ## API 基础协议
 
 - 成功响应：`{ "data": ..., "meta"?: ... }`
@@ -30,4 +38,4 @@ npm run dev:server
 
 ## 幂等限制
 
-当前 `InMemoryIdempotencyStore` 是 T003 骨架：相同 key 和相同请求会重放首次响应；相同 key 用于不同请求返回 409；并发中的相同请求返回明确冲突。它只适合开发和单实例验证，多实例或生产部署前必须替换为持久共享存储。
+当前 `InMemoryIdempotencyStore` 是 T003 骨架：相同 key 和相同请求会重放首次响应；相同 key 用于不同请求返回 409；并发中的相同请求返回明确冲突。认证请求按 Bearer 凭证哈希隔离，避免跨账号重放。它只适合开发和单实例验证，多实例或生产部署前必须替换为持久共享存储。

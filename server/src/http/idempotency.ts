@@ -77,6 +77,12 @@ function fingerprint(request: FastifyRequest): string {
     .digest("hex");
 }
 
+function authenticationScope(request: FastifyRequest): string {
+  const authorization = request.headers.authorization;
+  if (!authorization) return "anonymous";
+  return createHash("sha256").update(authorization).digest("hex");
+}
+
 function idempotencyKey(request: FastifyRequest): string {
   const value = request.headers["idempotency-key"];
   if (typeof value !== "string" || !keyPattern.test(value)) {
@@ -114,7 +120,7 @@ export function registerIdempotency(
 
     const key = idempotencyKey(request);
     const requestFingerprint = fingerprint(request);
-    const storageKey = `${request.method}:${request.routeOptions.url}:${key}`;
+    const storageKey = `${authenticationScope(request)}:${request.method}:${request.routeOptions.url}:${key}`;
     const stored = store.get(storageKey);
 
     if (stored) {

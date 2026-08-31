@@ -1,6 +1,6 @@
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance } from "fastify";
 
-import { ApiError } from "../http/errors.js";
+import { bearerToken } from "./request-authentication.js";
 import type { AuthService } from "./service.js";
 
 const tokenProperties = {
@@ -9,18 +9,6 @@ const tokenProperties = {
   accessExpiresAt: { type: "string", format: "date-time" },
   refreshExpiresAt: { type: "string", format: "date-time" },
 } as const;
-
-function bearerToken(request: FastifyRequest): string {
-  const authorization = request.headers.authorization;
-  if (!authorization?.startsWith("Bearer ")) {
-    throw new ApiError(401, "AUTHENTICATION_REQUIRED", "需要登录后访问");
-  }
-  const token = authorization.slice("Bearer ".length);
-  if (!token) {
-    throw new ApiError(401, "AUTHENTICATION_REQUIRED", "需要登录后访问");
-  }
-  return token;
-}
 
 export function registerAuthRoutes(
   app: FastifyInstance,

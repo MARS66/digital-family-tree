@@ -19,7 +19,14 @@ export interface AuthTokens {
 
 export interface LoginResult extends AuthTokens {
   user: AuthUser;
-  families: [];
+  families: AuthFamilyMembership[];
+}
+
+export interface AuthFamilyMembership {
+  familyId: string;
+  familyName: string;
+  role: string;
+  status: string;
 }
 
 export interface AuthServiceOptions {
@@ -105,10 +112,25 @@ export class AuthService {
       return { session, user };
     });
 
+    const memberships = await this.database.familyMembership.findMany({
+      where: {
+        userId: result.user.id,
+        status: "ACTIVE",
+        family: { deletedAt: null, status: "ACTIVE" },
+      },
+      include: { family: true },
+      orderBy: { joinedAt: "asc" },
+    });
+
     return {
       ...result.session,
       user: publicUser(result.user),
-      families: [],
+      families: memberships.map((membership) => ({
+        familyId: membership.familyId,
+        familyName: membership.family.name,
+        role: membership.role,
+        status: membership.status,
+      })),
     };
   }
 

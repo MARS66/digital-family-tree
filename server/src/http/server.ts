@@ -37,7 +37,7 @@ export async function createHttpServer(
           bearerAuth: {
             type: "http",
             scheme: "bearer",
-            bearerFormat: "JWT",
+            bearerFormat: "Opaque",
           },
           idempotencyKey: {
             type: "apiKey",

@@ -17,18 +17,60 @@ model AppMetadata {
 }
 
 model User {
-  id              String    @id @default(uuid()) @db.Uuid
-  wechatOpenid    String    @unique @map("wechat_openid") @db.VarChar(128)
-  wechatUnionid   String?   @map("wechat_unionid") @db.VarChar(128)
-  displayName     String?   @map("display_name") @db.VarChar(100)
-  avatarMediaId   String?   @map("avatar_media_id") @db.Uuid
-  status          String    @default("ACTIVE") @db.VarChar(32)
-  lastLoginAt     DateTime? @map("last_login_at") @db.Timestamptz(6)
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id              String             @id @default(uuid()) @db.Uuid
+  wechatOpenid    String             @unique @map("wechat_openid") @db.VarChar(128)
+  wechatUnionid   String?            @map("wechat_unionid") @db.VarChar(128)
+  displayName     String?            @map("display_name") @db.VarChar(100)
+  avatarMediaId   String?            @map("avatar_media_id") @db.Uuid
+  status          String             @default("ACTIVE") @db.VarChar(32)
+  lastLoginAt     DateTime?          @map("last_login_at") @db.Timestamptz(6)
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   sessions        Session[]
+  ownedFamilies   Family[]           @relation("FamilyOwner")
+  createdFamilies Family[]           @relation("FamilyCreator")
+  memberships     FamilyMembership[]
 
   @@map("users")
+}
+
+model Family {
+  id                   String             @id @default(uuid()) @db.Uuid
+  name                 String             @db.VarChar(100)
+  description          String?            @db.Text
+  originPlace          String?            @map("origin_place") @db.VarChar(200)
+  ownerUserId          String             @map("owner_user_id") @db.Uuid
+  status               String             @default("ACTIVE") @db.VarChar(32)
+  privacyPolicyVersion Int                @default(1) @map("privacy_policy_version")
+  createdBy            String             @map("created_by") @db.Uuid
+  createdAt            DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt            DateTime?          @map("deleted_at") @db.Timestamptz(6)
+  owner                User               @relation("FamilyOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
+  creator              User               @relation("FamilyCreator", fields: [createdBy], references: [id], onDelete: Restrict)
+  memberships          FamilyMembership[]
+
+  @@index([status])
+  @@map("families")
+}
+
+model FamilyMembership {
+  id           String    @id @default(uuid()) @db.Uuid
+  familyId     String    @map("family_id") @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  role         String    @db.VarChar(32)
+  status       String    @db.VarChar(32)
+  joinedAt     DateTime? @map("joined_at") @db.Timestamptz(6)
+  invitationId String?   @map("invitation_id") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  family       Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([familyId, userId])
+  @@index([userId, status])
+  @@index([familyId, status])
+  @@map("family_memberships")
 }
 
 model Session {

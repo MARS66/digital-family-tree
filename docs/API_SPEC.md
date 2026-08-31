@@ -21,8 +21,8 @@
 
 ## 3. Family 与成员
 
-- `POST /families`：`{ name, description?, firstPerson?, claimSelf? }`；原子创建 Family、Membership、可选 Person/Claim。已登录。
-- `GET /families/:familyId`：返回按权限过滤的摘要。
+- `POST /api/v1/families`：T011 输入 `{ name, description?, originPlace? }`；原子创建 Family 与创建者的 `OWNER/ACTIVE` Membership。首 Person 与 self claim 留给 T020 组合 API。
+- `GET /api/v1/families/:familyId`：仅有效成员可读取；不存在或不可披露统一返回 404。
 - `PATCH /families/:familyId`：配置更新；管理员，需版本。
 - `GET /families/:familyId/stats`：人数、关系、贡献、分支完成度。
 - `GET /families/:familyId/members?cursor=`：分页成员。

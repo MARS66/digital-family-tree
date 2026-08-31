@@ -27,11 +27,15 @@
 
 `id`, `name`, `description?`, `origin_place?`, `owner_user_id`, `status`, `privacy_policy_version`, `created_by`, timestamps, `deleted_at`。
 
+T011 状态限定为 `ACTIVE/ARCHIVED`，初始隐私策略版本为 1。创建时必须在同一事务内建立创建者的 `OWNER/ACTIVE` Membership；所有权移交必须同步更新 Family 与 Membership。
+
 ### FamilyMembership
 
 `id`, `family_id`, `user_id`, `role`（OWNER/FAMILY_ADMIN/MEMBER）, `status`（INVITED/ACTIVE/SUSPENDED/LEFT）, `joined_at`, `invitation_id?`, timestamps。
 
 约束：`(family_id,user_id)` 唯一（保留历史可改为有效记录部分唯一）。Branch 权限放单独授权表或 `BranchMembership`，避免一个字段表达多个范围。
+
+非邀请状态必须具有 `joined_at`；Family 范围读取同时限定 `family_id`、当前 `user_id` 和有效成员状态。
 
 ### Branch
 
