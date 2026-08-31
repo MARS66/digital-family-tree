@@ -55,6 +55,8 @@ T011 状态限定为 `ACTIVE/ARCHIVED`，初始隐私策略版本为 1。创建�
 
 校验：死亡日期不得早于出生日期；占位人物必须有标签且不可被认领；`merged_into_person_id` 不得指向自身并最终解析到 ACTIVE 人物。姓名不做全局唯一。
 
+T012 日期精度限定为 `YEAR/MONTH/DAY`，未知日期由日期值与精度同时为空表达；年/月采用区间起点规范化存储，先后关系按精度区间判断。占位人物的 `primary_name` 与显式上下文标签相同，不伪造姓名。更新与软删除使用 `(family_id,id,version,deleted_at IS NULL)` 原子条件并递增 version；软删除同时记录 `deleted_by`。
+
 ### PersonClaim
 
 `id`, `family_id`, `person_id`, `user_id`, `claim_type`（SELF，后续可扩展 GUARDIAN）, `status`（PENDING/APPROVED/REJECTED/REVOKED/DISPUTED）, `evidence_source_id?`, `review_id?`, timestamps。

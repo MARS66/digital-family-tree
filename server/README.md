@@ -28,6 +28,13 @@ npm run dev:server
 - 登录响应的 `families` 返回当前用户所有有效 Family Membership 摘要。
 - T011 尚不包括 Person、邀请加入、角色变更、所有权移交或完整权限引擎。
 
+## Person 基础
+
+- `GET /api/v1/families/:familyId/persons/:personId`：读取当前有效成员可见、未软删除的人物。
+- 日期使用 `{ value, precision }` 表达年、月或日；未知日期返回 `null`，不会使用假日期。
+- Person 领域层提供带 Family 限定、管理员校验、版本冲突和软删除审计上下文的 CRUD。
+- T012 不开放 Person 直写 HTTP API；创建由 T020 组合流程接入，修改和删除由 T030–T032 的贡献审核流程接入。
+
 ## API 基础协议
 
 - 成功响应：`{ "data": ..., "meta"?: ... }`

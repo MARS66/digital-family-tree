@@ -30,6 +30,8 @@ model User {
   ownedFamilies   Family[]           @relation("FamilyOwner")
   createdFamilies Family[]           @relation("FamilyCreator")
   memberships     FamilyMembership[]
+  createdPersons  Person[]           @relation("PersonCreator")
+  deletedPersons  Person[]           @relation("PersonDeleter")
 
   @@map("users")
 }
@@ -49,9 +51,46 @@ model Family {
   owner                User               @relation("FamilyOwner", fields: [ownerUserId], references: [id], onDelete: Restrict)
   creator              User               @relation("FamilyCreator", fields: [createdBy], references: [id], onDelete: Restrict)
   memberships          FamilyMembership[]
+  persons              Person[]
 
   @@index([status])
   @@map("families")
+}
+
+model Person {
+  id                 String    @id @default(uuid()) @db.Uuid
+  familyId           String    @map("family_id") @db.Uuid
+  primaryName        String    @map("primary_name") @db.VarChar(100)
+  formerName         String?   @map("former_name") @db.VarChar(100)
+  courtesyName       String?   @map("courtesy_name") @db.VarChar(100)
+  gender             String    @default("UNKNOWN") @db.VarChar(16)
+  isLiving           String    @default("UNKNOWN") @map("is_living") @db.VarChar(16)
+  birthDate          DateTime? @map("birth_date") @db.Date
+  birthDatePrecision String?   @map("birth_date_precision") @db.VarChar(16)
+  deathDate          DateTime? @map("death_date") @db.Date
+  deathDatePrecision String?   @map("death_date_precision") @db.VarChar(16)
+  birthPlace         String?   @map("birth_place") @db.VarChar(200)
+  summary            String?   @db.Text
+  isPlaceholder      Boolean   @default(false) @map("is_placeholder")
+  placeholderLabel   String?   @map("placeholder_label") @db.VarChar(200)
+  status             String    @default("ACTIVE") @db.VarChar(16)
+  mergedIntoPersonId String?   @map("merged_into_person_id") @db.Uuid
+  createdBy          String    @map("created_by") @db.Uuid
+  version            Int       @default(1)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz(6)
+  deletedBy          String?   @map("deleted_by") @db.Uuid
+  family             Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  creator            User      @relation("PersonCreator", fields: [createdBy], references: [id], onDelete: Restrict)
+  deleter            User?     @relation("PersonDeleter", fields: [deletedBy], references: [id], onDelete: Restrict)
+  mergedInto         Person?   @relation("PersonMerge", fields: [mergedIntoPersonId], references: [id], onDelete: Restrict)
+  mergedPersons      Person[]  @relation("PersonMerge")
+
+  @@index([familyId, status])
+  @@index([familyId, primaryName])
+  @@index([mergedIntoPersonId])
+  @@map("persons")
 }
 
 model FamilyMembership {

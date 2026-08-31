@@ -30,9 +30,9 @@
 
 ## 4. Person 与视图
 
-- `POST /families/:familyId/persons`：提交候选或由管理员建草稿；输入 `{ person, source?, contributionId? }`。
-- `GET /families/:familyId/persons/:personId`：字段过滤后的详情；合并对象返回 canonical ID。
-- `PATCH /families/:familyId/persons/:personId`：默认创建 ContributionItem，不直接覆盖正式事实。
+- `POST /api/v1/families/:familyId/persons`：由 T020 组合创建或 T030 Contribution 流程提供；T012 不开放绕过审核的直接写端点。
+- `GET /api/v1/families/:familyId/persons/:personId`：T012 已实现成员范围基础读取；软删除、跨 Family 或不可披露对象统一返回 404。日期返回 `{ value, precision }` 或 `null`。
+- `PATCH /api/v1/families/:familyId/persons/:personId`：后续创建 ContributionItem，不直接覆盖正式事实；领域写入必须携带 expectedVersion。
 - `GET /families/:familyId/persons/search?q=&branchId=&cursor=`：模糊搜索；仅返回可见摘要。
 - `GET /families/:familyId/persons/:personId/view?mode=self|ancestors|descendants&depth=`：局部图 DTO `{ nodes, edges, hiddenNodeCount, nextCursors }`。
 - `POST /families/:familyId/placeholders/:personId/resolve`：补全或提出合并；管理员/贡献流程。
