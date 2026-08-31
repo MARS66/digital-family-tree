@@ -63,6 +63,8 @@ T012 日期精度限定为 `YEAR/MONTH/DAY`，未知日期由日期值与精度�
 
 约束：同 Family 每个 User 仅一个 APPROVED SELF；同 Person 仅一个 APPROVED SELF（部分唯一索引）。待审重复通过事务锁处理。
 
+T020 建立最小持久模型。创建家族组合事务可为创建者和同事务新建的非占位首 Person 直接写入 `SELF/APPROVED`；这是初始化例外。通用申请、证据、审核、撤销和争议仍由 T043 实现，不能把该例外用于已有 Person。
+
 ### PrivacySetting
 
 `id`, `family_id`, `person_id?`, `record_type`, `record_id?`, `field_name?`, `visibility_scope`, `configured_by_user_id`, `reason?`, timestamps。

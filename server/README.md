@@ -22,11 +22,11 @@ npm run dev:server
 
 ## Family 与 Membership
 
-- `POST /api/v1/families`：登录用户创建 Family，并在同一事务内成为 `OWNER/ACTIVE` 成员。
+- `POST /api/v1/families`：登录用户在同一事务内创建 Family、`OWNER/ACTIVE` Membership、首 Person 和可选的 `SELF/APPROVED` claim。
 - `GET /api/v1/families/:familyId`：读取当前有效成员可见的 Family 摘要。
 - 非成员与不可见 Family 统一返回 404，避免通过接口探测 Family 是否存在。
 - 登录响应的 `families` 返回当前用户所有有效 Family Membership 摘要。
-- T011 尚不包括 Person、邀请加入、角色变更、所有权移交或完整权限引擎。
+- 占位首 Person 不允许 self claim；通用认领状态机、邀请加入、角色变更、所有权移交和完整权限引擎仍属于后续任务。
 
 ## Person 基础
 

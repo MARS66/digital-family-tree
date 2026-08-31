@@ -14,7 +14,7 @@ const partialDateSchema = {
   },
 } as const;
 
-const personSchema = {
+export const personResponseSchema = {
   type: "object",
   additionalProperties: false,
   required: [
@@ -84,7 +84,7 @@ export function registerPersonRoutes(
             type: "object",
             additionalProperties: false,
             required: ["data"],
-            properties: { data: personSchema },
+            properties: { data: personResponseSchema },
           },
         },
       },

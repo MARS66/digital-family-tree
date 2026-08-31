@@ -35,6 +35,7 @@ model User {
   createdRelationships Relationship[]     @relation("RelationshipCreator")
   createdPartnerUnions PartnerUnion[]     @relation("PartnerUnionCreator")
   deletedPartnerUnions PartnerUnion[]     @relation("PartnerUnionDeleter")
+  personClaims         PersonClaim[]
 
   @@map("users")
 }
@@ -57,6 +58,7 @@ model Family {
   persons              Person[]
   relationships        Relationship[]
   partnerUnions        PartnerUnion[]
+  personClaims         PersonClaim[]
 
   @@index([status])
   @@map("families")
@@ -95,11 +97,33 @@ model Person {
   childRelationships  Relationship[] @relation("RelationshipChild")
   partnerUnionsA      PartnerUnion[] @relation("PartnerUnionPersonA")
   partnerUnionsB      PartnerUnion[] @relation("PartnerUnionPersonB")
+  claims              PersonClaim[]
 
   @@index([familyId, status])
   @@index([familyId, primaryName])
   @@index([mergedIntoPersonId])
   @@map("persons")
+}
+
+model PersonClaim {
+  id               String   @id @default(uuid()) @db.Uuid
+  familyId         String   @map("family_id") @db.Uuid
+  personId         String   @map("person_id") @db.Uuid
+  userId           String   @map("user_id") @db.Uuid
+  claimType        String   @default("SELF") @map("claim_type") @db.VarChar(16)
+  status           String   @db.VarChar(16)
+  evidenceSourceId String?  @map("evidence_source_id") @db.Uuid
+  reviewId         String?  @map("review_id") @db.Uuid
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  family           Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  person           Person   @relation(fields: [personId], references: [id], onDelete: Restrict)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([familyId, status])
+  @@index([userId, status])
+  @@index([personId, status])
+  @@map("person_claims")
 }
 
 model PartnerUnion {

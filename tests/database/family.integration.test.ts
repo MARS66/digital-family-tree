@@ -71,6 +71,7 @@ describe("Family and Membership with PostgreSQL", () => {
         name,
         description: "共同整理家族资料",
         originPlace: "福建",
+        firstPerson: { primaryName: "首位人物" },
       },
     });
   }
@@ -134,6 +135,7 @@ describe("Family and Membership with PostgreSQL", () => {
     expect(second.json()).toEqual(first.json());
     expect(await database!.family.count()).toBe(1);
     expect(await database!.familyMembership.count()).toBe(1);
+    expect(await database!.person.count()).toBe(1);
   });
 
   it("does not disclose a Family across users", async () => {
@@ -223,5 +225,7 @@ describe("Family and Membership with PostgreSQL", () => {
     expect(response.statusCode).toBe(500);
     expect(await database!.family.count()).toBe(0);
     expect(await database!.familyMembership.count()).toBe(0);
+    expect(await database!.person.count()).toBe(0);
+    expect(await database!.personClaim.count()).toBe(0);
   });
 });

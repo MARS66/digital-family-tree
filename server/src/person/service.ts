@@ -194,6 +194,20 @@ export class PersonService {
     input: CreatePersonInput,
   ): Promise<PersonView> {
     await this.requireFamilyAccess(actorUserId, familyId, true);
+    return this.createInTransaction(
+      this.database,
+      actorUserId,
+      familyId,
+      input,
+    );
+  }
+
+  async createInTransaction(
+    database: Prisma.TransactionClient | PrismaClient,
+    actorUserId: string,
+    familyId: string,
+    input: CreatePersonInput,
+  ): Promise<PersonView> {
     const identity = validateIdentity(
       input.isPlaceholder ?? false,
       input.primaryName,
@@ -203,7 +217,7 @@ export class PersonService {
     const deathDate = normalizePartialDate(input.deathDate, "死亡日期");
     validateDateOrder(birthDate, deathDate);
 
-    const person = await this.database.person.create({
+    const person = await database.person.create({
       data: {
         familyId,
         ...identity,
