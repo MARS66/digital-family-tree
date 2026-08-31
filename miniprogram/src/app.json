@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/bootstrap/index",
+    "pages/family-create/index",
     "pages/family-home/index",
     "pages/family-tree/index",
     "pages/person-detail/index",

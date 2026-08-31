@@ -1,17 +1,73 @@
 .bootstrap {
-  box-sizing: border-box;
-  min-height: 100vh;
-  padding: 192rpx 48rpx 48rpx;
+  padding-top: 104rpx;
+}
+.subtitle {
+  margin-top: 18rpx;
+  line-height: 1.7;
+}
+.state-card,
+.join-card {
+  margin-top: 56rpx;
+  padding: 36rpx;
+}
+.state-copy {
+  margin: 20rpx 0 34rpx;
+  line-height: 1.7;
+}
+.privacy-row {
+  display: flex;
+  gap: 18rpx;
+  align-items: flex-start;
+  margin: 36rpx 0;
+  color: #555f58;
+  line-height: 1.5;
+}
+.checkbox {
+  flex: 0 0 36rpx;
+  height: 36rpx;
+  border: 2rpx solid #9da49f;
+  border-radius: 8rpx;
+  text-align: center;
+  line-height: 34rpx;
+}
+.checkbox--checked {
+  border-color: #315e49;
+  background: #315e49;
+  color: #fff;
+}
+.error-card {
+  border-color: rgba(164, 92, 38, 0.2);
+}
+.trace {
+  margin: -18rpx 0 30rpx;
+  font-size: 22rpx;
+}
+.choice-panel {
+  margin-top: 54rpx;
+}
+.welcome {
+  font-family: "Songti SC", serif;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+.divider {
+  margin: 34rpx 0;
+  color: #9da49f;
   text-align: center;
 }
-
-.bootstrap__title {
-  font-size: 52rpx;
-  font-weight: 600;
+.join-card {
+  margin-top: 0;
 }
-
-.bootstrap__message {
-  margin-top: 24rpx;
-  color: #73776f;
-  font-size: 30rpx;
+.invite-input {
+  height: 88rpx;
+  margin: 28rpx 0 22rpx;
+  padding: 0 28rpx;
+  border: 1rpx solid #d8d8d1;
+  border-radius: 18rpx;
+  background: #fff;
+}
+.hint {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
 }

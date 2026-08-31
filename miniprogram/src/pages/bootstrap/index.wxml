@@ -1,4 +1,36 @@
-<view class="bootstrap">
-  <view class="bootstrap__title">{{title}}</view>
-  <view class="bootstrap__message">{{message}}</view>
+<view class="page bootstrap">
+  <view class="eyebrow">DIGITAL FAMILY ARCHIVE</view>
+  <view class="page-title">数字家谱</view>
+  <view class="muted subtitle">把家族记忆整理成可追溯、可共同维护的档案。</view>
+  <view wx:if="{{viewState === 'restoring' || viewState === 'busy'}}" class="card state-card">
+    <view class="section-title">{{viewState === 'restoring' ? '正在恢复上次会话' : '正在安全登录'}}</view>
+    <view class="muted state-copy">请稍候，不需要重复填写已有内容。</view>
+  </view>
+  <view wx:elif="{{viewState === 'login'}}" class="card state-card">
+    <view class="section-title">从微信开始</view>
+    <view class="muted state-copy">登录只用于识别你的账号。人物档案与登录账号保持分离。</view>
+    <view class="privacy-row" bindtap="togglePrivacy">
+      <view class="checkbox {{privacyAccepted ? 'checkbox--checked' : ''}}">{{privacyAccepted ? '✓' : ''}}</view>
+      <text>我已阅读并同意隐私说明与服务规则</text>
+    </view>
+    <button class="primary-button" bindtap="login">微信登录</button>
+  </view>
+  <view wx:elif="{{viewState === 'error'}}" class="card state-card error-card">
+    <view class="section-title">登录暂时没有完成</view>
+    <view class="state-copy">{{errorMessage}}</view>
+    <view wx:if="{{traceId}}" class="muted trace">问题编号：{{traceId}}</view>
+    <button class="primary-button" bindtap="retryLogin">重试登录</button>
+  </view>
+  <view wx:elif="{{viewState === 'empty'}}" class="choice-panel">
+    <view class="welcome">你好，{{displayName}}</view>
+    <view class="muted state-copy">你还没有加入家族，可以创建新的家族档案，或使用亲友发来的邀请码。</view>
+    <button class="primary-button" bindtap="createFamily">创建家族</button>
+    <view class="divider"><text>或</text></view>
+    <view class="card join-card">
+      <view class="section-title">加入已有家族</view>
+      <input class="invite-input" value="{{inviteCode}}" maxlength="64" placeholder="输入邀请码" bindinput="changeInviteCode" />
+      <button class="secondary-button" bindtap="joinFamily">使用邀请码加入</button>
+      <view class="muted hint">邀请码会保存在本机，登录中断或重试不会丢失。</view>
+    </view>
+  </view>
 </view>

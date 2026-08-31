@@ -1,0 +1,13 @@
+<view class="page">
+  <view class="eyebrow">NEW FAMILY</view>
+  <view class="page-title">创建家族</view>
+  <view class="muted intro">先留下家族名称与第一位人物。你的输入会自动保存在本机。</view>
+  <view class="card form-card">
+    <view class="field-label">家族名称</view>
+    <input class="field-input" value="{{familyName}}" maxlength="80" placeholder="例如：林氏家族" bindinput="updateFamilyName" />
+    <view class="field-label">第一位人物</view>
+    <input class="field-input" value="{{firstPersonName}}" maxlength="80" placeholder="输入姓名" bindinput="updateFirstPersonName" />
+    <button class="primary-button" bindtap="continueCreation">继续</button>
+  </view>
+  <view class="muted note">当前页面用于 T021 的流程衔接；提交创建、本人认领与完整校验将在 T022 完成。</view>
+</view>

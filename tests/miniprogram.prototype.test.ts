@@ -11,14 +11,17 @@ const appConfig = JSON.parse(
 };
 
 describe("miniprogram UI prototype", () => {
-  it("registers exactly the five requested prototype pages", () => {
-    expect(appConfig.pages).toEqual([
-      "pages/family-home/index",
-      "pages/family-tree/index",
-      "pages/person-detail/index",
-      "pages/family-entry/index",
-      "pages/review-center/index",
-    ]);
+  it("keeps the five prototype pages registered after adding product flows", () => {
+    expect(appConfig.pages).toEqual(
+      expect.arrayContaining([
+        "pages/family-home/index",
+        "pages/family-tree/index",
+        "pages/person-detail/index",
+        "pages/family-entry/index",
+        "pages/review-center/index",
+      ]),
+    );
+    expect(appConfig.pages[0]).toBe("pages/bootstrap/index");
   });
 
   it.each(appConfig.pages)("provides a complete page bundle for %s", (page) => {
