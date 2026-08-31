@@ -89,6 +89,8 @@ T013 对同一 Family 的关系写入使用 PostgreSQL advisory transaction lock
 
 写入前按 UUID 排序，保证 `person_a_id < person_b_id`，有效组合唯一并禁止同人。若需婚礼事件，使用 Event 关联，而非重复一条关系。子女与各父母分别建 `PARENT_OF`；不要从伴侣关系自动推断亲子事实。
 
+T014 的活跃组合使用部分唯一索引；两端同 Family 与未删除状态由 trigger 校验。起止日期只接受完整日期且结束不得早于开始。软删除记录操作者并递增 version，之后允许重建同一组合；存在活跃 PartnerUnion 的 Person 不允许软删除。
+
 ## 5. 共建、审核与版本
 
 ### Contribution

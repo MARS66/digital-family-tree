@@ -43,8 +43,9 @@
 - `POST /families/:familyId/contributions/:id/relationships`：添加亲子候选 `{ parentId, childId, parentRole, sourceId? }`。
 - `DELETE /families/:familyId/contributions/:id/relationships/:relationshipId`：提出删除。
 - `POST /families/:familyId/contributions/:id/unions`：伴侣候选 `{ person1Id, person2Id, unionType, dates?, sourceId? }`。
-- `GET /api/v1/families/:familyId/persons/:personId/relations`：T013 已实现成员范围的父母、子女与推导兄弟姐妹读取；兄弟姐妹返回 `FULL/HALF/UNKNOWN` 和共享父母 ID。
+- `GET /api/v1/families/:familyId/persons/:personId/relations`：已实现成员范围的父母、子女、推导兄弟姐妹与伴侣读取；兄弟姐妹返回 `FULL/HALF/UNKNOWN` 和共享父母 ID，伴侣返回规范化 PartnerUnion 摘要。
 - T013 的 PARENT_OF 创建由带 Family 事务锁和循环检测的领域服务提供；公开写入口仍由后续 Contribution/Review 路由接入，不允许直接覆盖正式事实。
+- T014 的 PartnerUnion 创建和软删除同样使用 Family 事务锁和乐观锁；A-B 与 B-A 视为同一组合，且绝不自动生成亲子事实。公开写入口留给 Contribution/Review。
 
 ## 6. Claim
 

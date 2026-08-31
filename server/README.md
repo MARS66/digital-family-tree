@@ -42,6 +42,13 @@ npm run dev:server
 - 兄弟姐妹分为 `FULL/HALF/UNKNOWN`，不会把资料缺失错误解释为半同胞。
 - 存在活跃关系的 Person 不能软删除。T013 不开放绕过 Contribution/Review 的关系写 HTTP API。
 
+## 伴侣关系
+
+- PartnerUnion 按 UUID 规范化端点，A-B 与 B-A 是同一对称关系。
+- 支持 `MARRIAGE/PARTNERSHIP/UNKNOWN`、可选起止日期、版本校验、软删除后重建及同 Family 数据库约束。
+- 人物关系读取会从任一端点返回同一 PartnerUnion；伴侣关系不会自动生成任何亲子边。
+- 存在活跃 PartnerUnion 的 Person 不能软删除。写 HTTP API 仍等待 Contribution/Review 接入。
+
 ## API 基础协议
 
 - 成功响应：`{ "data": ..., "meta"?: ... }`

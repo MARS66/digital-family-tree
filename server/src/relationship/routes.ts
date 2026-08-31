@@ -57,7 +57,13 @@ export function registerRelationshipRoutes(
               data: {
                 type: "object",
                 additionalProperties: false,
-                required: ["person", "parents", "children", "siblings"],
+                required: [
+                  "person",
+                  "parents",
+                  "children",
+                  "siblings",
+                  "partners",
+                ],
                 properties: {
                   person: personSummarySchema,
                   parents: {
@@ -83,6 +89,30 @@ export function registerRelationshipRoutes(
                           type: "array",
                           items: { type: "string", format: "uuid" },
                         },
+                        person: personSummarySchema,
+                      },
+                    },
+                  },
+                  partners: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      additionalProperties: false,
+                      required: [
+                        "unionId",
+                        "unionType",
+                        "startDate",
+                        "endDate",
+                        "person",
+                      ],
+                      properties: {
+                        unionId: { type: "string", format: "uuid" },
+                        unionType: {
+                          type: "string",
+                          enum: ["MARRIAGE", "PARTNERSHIP", "UNKNOWN"],
+                        },
+                        startDate: { type: ["string", "null"], format: "date" },
+                        endDate: { type: ["string", "null"], format: "date" },
                         person: personSummarySchema,
                       },
                     },

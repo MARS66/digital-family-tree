@@ -48,6 +48,13 @@ export interface PersonRelationsView {
     sharedParentIds: string[];
     person: PersonSummary;
   }[];
+  partners: {
+    unionId: string;
+    unionType: string;
+    startDate: string | null;
+    endDate: string | null;
+    person: PersonSummary;
+  }[];
 }
 
 function personSummary(person: Person): PersonSummary {
@@ -209,7 +216,7 @@ export class RelationshipService {
       throw new ApiError(404, "PERSON_NOT_FOUND", "人物不存在或无权访问");
     }
 
-    const [parentEdges, childEdges] = await Promise.all([
+    const [parentEdges, partnerUnions, childEdges] = await Promise.all([
       this.database.relationship.findMany({
         where: {
           familyId,
@@ -220,6 +227,16 @@ export class RelationshipService {
           parent: { deletedAt: null, status: "ACTIVE" },
         },
         include: { parent: true },
+        orderBy: { createdAt: "asc" },
+      }),
+      this.database.partnerUnion.findMany({
+        where: {
+          familyId,
+          status: "ACTIVE",
+          deletedAt: null,
+          OR: [{ personAId: personId }, { personBId: personId }],
+        },
+        include: { personA: true, personB: true },
         orderBy: { createdAt: "asc" },
       }),
       this.database.relationship.findMany({
@@ -310,6 +327,17 @@ export class RelationshipService {
         person: personSummary(relationship.child),
       })),
       siblings,
+      partners: partnerUnions.map((union) => {
+        const partner =
+          union.personAId === personId ? union.personB : union.personA;
+        return {
+          unionId: union.id,
+          unionType: union.unionType,
+          startDate: union.startDate?.toISOString().slice(0, 10) ?? null,
+          endDate: union.endDate?.toISOString().slice(0, 10) ?? null,
+          person: personSummary(partner),
+        };
+      }),
     };
   }
 

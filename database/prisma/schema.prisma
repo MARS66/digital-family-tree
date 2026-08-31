@@ -33,6 +33,8 @@ model User {
   createdPersons       Person[]           @relation("PersonCreator")
   deletedPersons       Person[]           @relation("PersonDeleter")
   createdRelationships Relationship[]     @relation("RelationshipCreator")
+  createdPartnerUnions PartnerUnion[]     @relation("PartnerUnionCreator")
+  deletedPartnerUnions PartnerUnion[]     @relation("PartnerUnionDeleter")
 
   @@map("users")
 }
@@ -54,6 +56,7 @@ model Family {
   memberships          FamilyMembership[]
   persons              Person[]
   relationships        Relationship[]
+  partnerUnions        PartnerUnion[]
 
   @@index([status])
   @@map("families")
@@ -90,11 +93,40 @@ model Person {
   mergedPersons       Person[]       @relation("PersonMerge")
   parentRelationships Relationship[] @relation("RelationshipParent")
   childRelationships  Relationship[] @relation("RelationshipChild")
+  partnerUnionsA      PartnerUnion[] @relation("PartnerUnionPersonA")
+  partnerUnionsB      PartnerUnion[] @relation("PartnerUnionPersonB")
 
   @@index([familyId, status])
   @@index([familyId, primaryName])
   @@index([mergedIntoPersonId])
   @@map("persons")
+}
+
+model PartnerUnion {
+  id        String    @id @default(uuid()) @db.Uuid
+  familyId  String    @map("family_id") @db.Uuid
+  personAId String    @map("person_a_id") @db.Uuid
+  personBId String    @map("person_b_id") @db.Uuid
+  unionType String    @default("UNKNOWN") @map("union_type") @db.VarChar(24)
+  startDate DateTime? @map("start_date") @db.Date
+  endDate   DateTime? @map("end_date") @db.Date
+  status    String    @default("ACTIVE") @db.VarChar(16)
+  sourceId  String?   @map("source_id") @db.Uuid
+  createdBy String    @map("created_by") @db.Uuid
+  version   Int       @default(1)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  deletedBy String?   @map("deleted_by") @db.Uuid
+  family    Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  personA   Person    @relation("PartnerUnionPersonA", fields: [personAId], references: [id], onDelete: Restrict)
+  personB   Person    @relation("PartnerUnionPersonB", fields: [personBId], references: [id], onDelete: Restrict)
+  creator   User      @relation("PartnerUnionCreator", fields: [createdBy], references: [id], onDelete: Restrict)
+  deleter   User?     @relation("PartnerUnionDeleter", fields: [deletedBy], references: [id], onDelete: Restrict)
+
+  @@index([familyId, personAId, status])
+  @@index([familyId, personBId, status])
+  @@map("partner_unions")
 }
 
 model Relationship {

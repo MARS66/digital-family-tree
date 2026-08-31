@@ -347,7 +347,15 @@ export class PersonService {
           OR: [{ fromPersonId: personId }, { toPersonId: personId }],
         },
       });
-      if (activeRelationships > 0) {
+      const activePartnerUnions = await transaction.partnerUnion.count({
+        where: {
+          familyId,
+          status: "ACTIVE",
+          deletedAt: null,
+          OR: [{ personAId: personId }, { personBId: personId }],
+        },
+      });
+      if (activeRelationships > 0 || activePartnerUnions > 0) {
         throw new ApiError(
           409,
           "PERSON_HAS_ACTIVE_RELATIONSHIPS",
