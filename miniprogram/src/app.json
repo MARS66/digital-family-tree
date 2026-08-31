@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/family-home/index",
+    "pages/family-tree/index",
+    "pages/person-detail/index",
+    "pages/family-entry/index",
+    "pages/review-center/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#f6f1e7",
+    "navigationBarTitleText": "数字家谱",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6f1e7"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

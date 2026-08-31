@@ -1,0 +1,23 @@
+<view class="page entry">
+  <view class="eyebrow">围绕一个人，补全一个家</view><view class="page-title">为张云舟添加亲属</view>
+  <view class="focus-strip"><view class="mini-avatar">舟</view><view><view>焦点人物 · 张云舟</view><view class="muted">云岫张氏 · 长房</view></view></view>
+
+  <view class="step"><text>01</text><view><view class="section-title">选择亲属关系</view><view class="muted">这位成员与张云舟是什么关系？</view></view></view>
+  <view class="role-grid"><view wx:for="{{roles}}" wx:key="*this" data-role="{{item}}" bindtap="selectRole" class="role {{selectedRole === item ? 'role--active' : ''}}">{{item}}</view></view>
+
+  <view class="step"><text>02</text><view><view class="section-title">填写人物资料</view><view class="muted">不确定的信息可以留空</view></view></view>
+  <view class="form card">
+    <view class="field"><view class="label">姓名 <text>必填</text></view><input disabled="{{unknown}}" value="{{name}}" bindinput="setName" placeholder="请输入真实姓名" /></view>
+    <view class="unknown" bindtap="toggleUnknown"><view class="checkbox {{unknown ? 'checked' : ''}}">{{unknown ? '✓' : ''}}</view><view><view>姓名待考</view><view class="muted">创建“张云舟之{{selectedRole}}”占位，不能被认领</view></view></view>
+    <view class="field"><view class="label">出生年份</view><input type="number" maxlength="4" value="{{birthYear}}" bindinput="setBirthYear" placeholder="例如 1956，可不填" /></view>
+  </view>
+
+  <view class="step"><text>03</text><view><view class="section-title">说明资料来源</view><view class="muted">帮助审核者判断可信度</view></view></view>
+  <view class="form card">
+    <picker mode="selector" range="{{['本人确认','亲属口述','旧谱记载','其他']}}" bindchange="setSource"><view class="picker"><view><view class="label">来源类型</view><view>{{source}}</view></view><view>⌄</view></view></picker>
+    <view class="field"><view class="label">补充说明</view><textarea value="{{note}}" bindinput="setNote" placeholder="例如：由姑妈张蕙兰电话确认" maxlength="120"></textarea><view class="count">{{note.length}}/120</view></view>
+  </view>
+
+  <view class="notice"><text>候选</text><view>提交后进入共建审核。审核通过前，不会出现在正式家谱中。</view></view>
+  <view class="bottom-actions"><button class="secondary-button" bindtap="saveDraft">保存草稿</button><button class="primary-button" bindtap="submit">提交审核</button></view>
+</view>

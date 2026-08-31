@@ -7,13 +7,17 @@
 - 成功响应：`{ data, meta? }`；错误：`{ error: { code, message, details?, traceId } }`。
 - 常用状态：400 校验失败、401 未登录、403 无权、404 不存在或不可披露、409 版本/重复/关系冲突、422 业务规则、429 限流。
 - 后端按 Family 租户、资源范围、字段隐私过滤；禁止客户端自行裁剪敏感数据。
+- 基础设施端点：`GET /health` 返回统一成功包；`GET /openapi.json` 返回 OpenAPI 3.1 文档。
+- trace ID 由服务端生成并同时写入 `X-Trace-Id` 响应头；客户端传入值不直接作为内部 trace ID。
+- 相同 `Idempotency-Key`、方法、路径和请求体重试时重放首次响应；同 key 对应不同请求或前次仍在处理时返回 409。
 
 ## 2. 认证
 
-- `POST /auth/wechat/login`：输入 `{ code }`；输出 `{ accessToken, refreshToken, user, families }`。
-- `POST /auth/refresh`：轮换会话。
-- `POST /auth/logout`：撤销当前会话。
-- `GET /me`：账号、家族成员身份和已批准认领摘要。
+- `POST /api/v1/auth/wechat/login`：输入 `{ code }`；输出 `{ accessToken, refreshToken, accessExpiresAt, refreshExpiresAt, user, families }`。
+- `POST /api/v1/auth/refresh`：输入 `{ refreshToken }`；原子撤销旧会话并返回一对新 token，旧 token 不可重用。
+- `POST /api/v1/auth/logout`：Bearer access token 鉴权并撤销当前会话。
+- `GET /api/v1/me`：账号、家族成员身份和已批准认领摘要（后续任务实现）。
+- access token 默认 15 分钟，refresh token 默认 30 天；服务端仅保存 token 哈希。所有认证写接口同样要求 `Idempotency-Key`。
 
 ## 3. Family 与成员
 

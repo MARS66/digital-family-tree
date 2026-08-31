@@ -1,0 +1,99 @@
+<view class="page tree-page">
+  <view class="tree-head">
+    <view><view class="eyebrow">云岫张氏 · 局部家谱</view><view class="page-title">亲属关系</view></view>
+    <button class="add" bindtap="addRelative">＋ 添加</button>
+  </view>
+  <view class="mode-switch">
+    <view wx:for="{{modes}}" wx:key="*this" data-mode="{{item}}" bindtap="selectMode" class="mode {{viewMode === item ? 'mode--active' : ''}}">{{item}}</view>
+  </view>
+  <view class="hint" wx:if="{{viewMode === '以我为中心'}}">仅展示与焦点人物直接相关的亲属，点击人物可查看详情</view>
+  <view class="hint" wx:elif="{{viewMode === '祖先'}}">默认展示三代祖先，可沿父系或母系继续向上展开</view>
+  <view class="hint" wx:else>按家庭分支展示三代后人，可折叠已完成的分支</view>
+
+  <block wx:if="{{viewMode === '以我为中心'}}">
+    <view class="generation-label">父母</view>
+    <view class="parents">
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar male">山</view><view class="node-name">张远山</view><view class="node-meta">父亲 · 68岁</view></view>
+      <view class="relation-line"></view>
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar female">兰</view><view class="node-name">林秋兰</view><view class="node-meta">母亲 · 66岁</view></view>
+    </view>
+    <view class="vertical-line"></view>
+
+    <view class="generation-label">我的家庭</view>
+    <view class="couple-row">
+      <view class="person-node focus" bindtap="openPerson"><view class="node-avatar male">舟</view><view class="node-name">张云舟</view><view class="node-meta">我 · 已认领</view></view>
+      <view class="heart">结伴<br/>2009</view>
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar female">宁</view><view class="node-name">沈嘉宁</view><view class="node-meta">伴侣</view></view>
+    </view>
+    <view class="vertical-line short"></view>
+
+    <view class="generation-label">子女</view>
+    <view class="children">
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar child">禾</view><view class="node-name">张禾</view><view class="node-meta">女儿 · 14岁</view></view>
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar child">屿</view><view class="node-name">张屿</view><view class="node-meta">儿子 · 9岁</view></view>
+      <view class="person-node placeholder" bindtap="addRelative"><view class="node-avatar">＋</view><view class="node-name">添加子女</view><view class="node-meta">可暂存未知</view></view>
+    </view>
+
+    <view class="protected card" bindtap="toggleExpand">
+      <view class="lock">隐</view><view class="protected__copy"><view>受保护的亲属</view><view class="muted">为保持关系结构，该人物姓名已隐藏</view></view><view class="chevron">{{expanded ? '⌃' : '⌄'}}</view>
+    </view>
+    <view wx:if="{{expanded}}" class="privacy-note">你当前没有权限查看此人物的详细资料，可以联系家族管理员。</view>
+  </block>
+
+  <block wx:elif="{{viewMode === '祖先'}}">
+    <view class="lineage-summary card"><view><text>3</text> 已展示代数</view><view><text>6</text> 可见祖先</view><view><text>2</text> 待补资料</view></view>
+    <view class="generation-label">第三代 · 曾祖辈</view>
+    <scroll-view class="ancestor-scroll" scroll-x="true"><view class="ancestor-row ancestor-row--wide">
+      <view class="person-node compact" bindtap="openPerson"><view class="node-avatar male">礼</view><view class="node-name">张怀礼</view><view class="node-meta">曾祖父</view></view>
+      <view class="person-node compact" bindtap="openPerson"><view class="node-avatar female">秀</view><view class="node-name">周秀珍</view><view class="node-meta">曾祖母</view></view>
+      <view class="person-node compact protected-node"><view class="node-avatar">隐</view><view class="node-name">受保护亲属</view><view class="node-meta">外曾祖父</view></view>
+      <view class="person-node compact placeholder" bindtap="addRelative"><view class="node-avatar">＋</view><view class="node-name">姓名待考</view><view class="node-meta">外曾祖母</view></view>
+    </view></scroll-view>
+    <view class="branch-lines"><view></view><view></view></view>
+    <view class="generation-label">第二代 · 祖辈</view>
+    <view class="ancestor-row">
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar male">海</view><view class="node-name">张望海</view><view class="node-meta">祖父 · 已故</view></view>
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar female">蕙</view><view class="node-name">陈蕙芳</view><view class="node-meta">祖母 · 90岁</view></view>
+    </view>
+    <view class="vertical-line"></view>
+    <view class="generation-label">第一代 · 父母</view>
+    <view class="ancestor-row">
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar male">山</view><view class="node-name">张远山</view><view class="node-meta">父亲 · 68岁</view></view>
+      <view class="person-node" bindtap="openPerson"><view class="node-avatar female">兰</view><view class="node-name">林秋兰</view><view class="node-meta">母亲 · 66岁</view></view>
+    </view>
+    <view class="vertical-line short"></view>
+    <view class="person-node focus center-node" bindtap="openPerson"><view class="node-avatar male">舟</view><view class="node-name">张云舟</view><view class="node-meta">我 · 焦点人物</view></view>
+
+    <view wx:if="{{ancestorExpanded}}" class="older-generation card">
+      <view class="older-generation__title">第四代线索</view>
+      <view class="older-generation__row"><view><view>张怀礼之父</view><view class="muted">姓名待考 · 来源：旧谱残页</view></view><view class="status-pill status-pill--warm">待补全</view></view>
+      <view class="older-generation__row"><view><view>周秀珍的父母</view><view class="muted">尚无可靠资料</view></view><button bindtap="addRelative">补录</button></view>
+    </view>
+    <button class="expand-button" bindtap="toggleAncestors">{{ancestorExpanded ? '收起第四代' : '继续向上展开第四代'}} {{ancestorExpanded ? '⌃' : '⌄'}}</button>
+  </block>
+
+  <block wx:else>
+    <view class="lineage-summary card"><view><text>2</text> 子女</view><view><text>3</text> 孙辈</view><view><text>78%</text> 分支完整度</view></view>
+    <view class="person-node focus center-node" bindtap="openPerson"><view class="node-avatar male">舟</view><view class="node-name">张云舟</view><view class="node-meta">我 · 第一代</view></view>
+    <view class="descendant-trunk"></view>
+
+    <view class="family-branch card">
+      <view class="branch-head" bindtap="toggleDescendants"><view class="branch-index">01</view><view class="branch-head__copy"><view>张禾分支</view><view class="muted">1 位子女 · 资料完整</view></view><view>{{descendantExpanded ? '⌃' : '⌄'}}</view></view>
+      <view wx:if="{{descendantExpanded}}" class="branch-content">
+        <view class="couple-inline"><view class="mini-person" bindtap="openPerson"><view class="node-avatar child">禾</view><view><view>张禾</view><view class="node-meta">女儿 · 14岁</view></view></view><view class="partner-dash">—</view><view class="mini-person"><view class="node-avatar neutral">安</view><view><view>顾安</view><view class="node-meta">伴侣</view></view></view></view>
+        <view class="vertical-line short"></view>
+        <view class="descendant-children"><view class="person-node compact" bindtap="openPerson"><view class="node-avatar child">沐</view><view class="node-name">顾沐</view><view class="node-meta">外孙女 · 4岁</view></view><view class="person-node compact placeholder" bindtap="addRelative"><view class="node-avatar">＋</view><view class="node-name">添加子女</view><view class="node-meta">继续补录</view></view></view>
+      </view>
+    </view>
+
+    <view class="family-branch card">
+      <view class="branch-head"><view class="branch-index">02</view><view class="branch-head__copy"><view>张屿分支</view><view class="muted">2 位子女 · 缺少来源</view></view><view class="status-pill status-pill--warm">待完善</view></view>
+      <view class="branch-content">
+        <view class="couple-inline"><view class="mini-person" bindtap="openPerson"><view class="node-avatar child">屿</view><view><view>张屿</view><view class="node-meta">儿子 · 9岁</view></view></view><view class="partner-dash">—</view><view class="mini-person protected-mini"><view class="node-avatar">隐</view><view><view>受保护亲属</view><view class="node-meta">伴侣</view></view></view></view>
+        <view class="vertical-line short"></view>
+        <view class="descendant-children"><view class="person-node compact" bindtap="openPerson"><view class="node-avatar child">川</view><view class="node-name">张川</view><view class="node-meta">孙子 · 3岁</view></view><view class="person-node compact" bindtap="openPerson"><view class="node-avatar child">月</view><view class="node-name">张月</view><view class="node-meta">孙女 · 1岁</view></view></view>
+      </view>
+    </view>
+    <button class="expand-button" bindtap="addRelative">＋ 为后代分支补充成员</button>
+  </block>
+</view>

@@ -45,7 +45,7 @@ cp .env.example .env
 npm run check
 ```
 
-`npm run check` 会依次检查格式、静态规则、TypeScript 类型和自动化测试。提交到 GitHub 后，CI 会在 Node.js 22 环境执行同一质量门禁。
+`npm run check` 会依次检查格式、静态规则、TypeScript 类型和自动化测试。提交到 GitHub 后，CI 会按 `.nvmrc` 使用 Node.js 24.19.0，执行质量门禁、构建和启动 smoke test。
 
 如需分别执行：
 
@@ -57,12 +57,66 @@ npm test
 npm run build
 ```
 
+### 启动后端工程
+
+开发时直接运行 TypeScript 服务壳：
+
+```bash
+npm run dev:server
+```
+
+生产式启动需要先构建：
+
+```bash
+npm run build
+npm run start:server
+```
+
+服务默认监听 `127.0.0.1:3000`。启动后可访问：
+
+- `GET /health`：服务存活检查。
+- `GET /openapi.json`：OpenAPI 3.1 文档。
+
+统一响应、错误、trace ID、校验和幂等约定见 `server/README.md`。
+
+### 启动小程序工程
+
+1. 在微信开发者工具中导入仓库根目录；工具会读取 `project.config.json`。
+2. 本地体验可使用配置中的测试 AppID；接入真实微信能力前替换为项目自己的 AppID。
+3. 运行 `npm run dev:miniprogram` 可持续执行 TypeScript 类型检查。
+
+当前启动页为 5 页面移动端 UI 原型，使用本地模拟数据验证家族总览、局部家谱、人物详情、家庭补录与共建审核流程；尚未接入登录、真实权限或后端 API。
+
+### 启动 PostgreSQL
+
+项目使用 PostgreSQL 17。安装 Docker 的环境可执行：
+
+```bash
+docker compose up -d postgres
+npm run db:migrate
+npm run db:seed
+npm run test:db
+```
+
+`docker compose` 的账号只用于本地开发。集成测试通过 `TEST_DATABASE_URL` 连接维护数据库，并为每个测试创建和清理独立数据库；禁止将它指向生产环境。
+
+数据库模型、迁移流程和回滚策略见 `database/README.md`。常用命令：
+
+```bash
+npm run db:validate
+npm run db:generate
+npm run db:migrate
+npm run db:migrate:dev -- --name <change>
+npm run db:seed
+npm run test:db
+```
+
 ### 工作区结构
 
 - `packages/contracts/`：前后端共享契约；业务 API 协议将在 T003 定义。
-- `server/`：Node.js/TypeScript 后端；HTTP 服务将在 T003 引入。
-- `miniprogram/`：微信小程序 TypeScript 工程；业务页面按后续 UI 任务引入。
-- `database/`：数据库资产占位；迁移框架将在 T002 引入。
+- `server/`：可启动的 Node.js/TypeScript 应用壳；HTTP 服务将在 T003 引入。
+- `miniprogram/`：可由微信开发者工具直接导入的 TypeScript 工程壳；业务页面按后续 UI 任务引入。
+- `database/`：Prisma schema、迁移、种子和数据库操作说明。
 - `tests/`：跨工作区 smoke、集成和验收测试。
 
 本地密钥只放在被 Git 忽略的 `.env` 中。新增配置项时同步更新 `.env.example`，但不得写入真实密钥。

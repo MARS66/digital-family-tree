@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../../server/src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Framework-level metadata only; business entities begin in later tasks.
+model AppMetadata {
+  key       String   @id @db.Text
+  value     Json     @db.JsonB
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_metadata")
+}
+
+model User {
+  id              String    @id @default(uuid()) @db.Uuid
+  wechatOpenid    String    @unique @map("wechat_openid") @db.VarChar(128)
+  wechatUnionid   String?   @map("wechat_unionid") @db.VarChar(128)
+  displayName     String?   @map("display_name") @db.VarChar(100)
+  avatarMediaId   String?   @map("avatar_media_id") @db.Uuid
+  status          String    @default("ACTIVE") @db.VarChar(32)
+  lastLoginAt     DateTime? @map("last_login_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  sessions        Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  accessTokenHash  String    @unique @map("access_token_hash") @db.Char(64)
+  refreshTokenHash String    @unique @map("refresh_token_hash") @db.Char(64)
+  accessExpiresAt  DateTime  @map("access_expires_at") @db.Timestamptz(6)
+  refreshExpiresAt DateTime  @map("refresh_expires_at") @db.Timestamptz(6)
+  lastUsedAt       DateTime? @map("last_used_at") @db.Timestamptz(6)
+  revokedAt        DateTime? @map("revoked_at") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@map("sessions")
+}

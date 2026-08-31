@@ -1,0 +1,9 @@
+{
+  "desc": "The sitemap for the engineering bootstrap shell.",
+  "rules": [
+    {
+      "action": "disallow",
+      "page": "*"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<view class="page review">
+  <view class="eyebrow">云岫张氏 · 管理员视图</view><view class="page-title">共建审核中心</view>
+  <view class="summary card"><view><text class="summary__number">5</text><text>待处理</text></view><view><text class="summary__number warm">1</text><text>风险项</text></view><view><text class="summary__number">2.4h</text><text>平均等待</text></view></view>
+  <scroll-view class="filters" scroll-x="true"><view wx:for="{{filters}}" wx:key="*this" data-filter="{{item}}" bindtap="selectFilter" class="filter {{activeFilter === item ? 'filter--active' : ''}}">{{item}}</view></scroll-view>
+
+  <view class="workspace">
+    <view class="section-title">审核队列</view>
+    <view wx:for="{{queue}}" wx:key="id" data-id="{{item.id}}" bindtap="selectItem" class="queue-item card {{selectedId === item.id ? 'queue-item--active' : ''}}">
+      <view class="queue-item__top"><view class="kind">{{item.type}}</view><view class="risk risk--{{item.tone}}">{{item.risk}}</view></view>
+      <view class="queue-item__title">{{item.title}}</view><view class="muted">{{item.author}} 提交 · {{item.time}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{selectedId === 1}}" class="review-detail">
+    <view class="detail-head"><view><view class="eyebrow">当前审核项</view><view class="section-title">新增人物与父子关系</view></view><view class="status-pill status-pill--warm">待审核</view></view>
+    <view class="candidate card">
+      <view class="candidate__person"><view class="avatar">山</view><view><view class="candidate__name">张远山</view><view class="muted">男 · 1956 年生</view></view></view>
+      <view class="arrow">↓ <text>父亲</text></view>
+      <view class="candidate__person"><view class="avatar focus">舟</view><view><view class="candidate__name">张云舟</view><view class="muted">谱中已有 · 正式人物</view></view></view>
+    </view>
+
+    <view class="risk-box"><view class="risk-box__title">发现疑似重复人物</view><view>谱中已有“张远珊（1957 年生）”，姓名相似且属于同一分支。请在批准前确认。</view><view class="compare">查看重复对比 →</view></view>
+
+    <view class="section-head"><view class="section-title">资料来源</view><view class="status-pill">已提供</view></view>
+    <view class="source card"><view class="source__mark">口</view><view><view>亲属口述</view><view class="muted">“由姑妈张蕙兰电话确认，是云舟的父亲。”</view></view></view>
+
+    <view class="checks card"><view class="check"><text>✓</text><view><view>关系循环检测</view><view class="muted">未形成祖先循环</view></view></view><view class="check"><text>✓</text><view><view>版本检查</view><view class="muted">基于人物最新版本</view></view></view><view class="check warning"><text>!</text><view><view>重复人物检测</view><view class="muted">1 个候选需要人工判断</view></view></view></view>
+    <view class="decision"><button data-action="reject" bindtap="decide" class="reject">驳回</button><button data-action="revise" bindtap="decide" class="revise">要求修改</button><button data-action="approve" bindtap="decide" class="approve">批准入谱</button></view>
+  </view>
+  <view wx:else class="empty-detail card"><view>已选择一项低风险提交</view><view class="muted">原型重点审核详情请点击第一条“为张云舟添加父亲”</view></view>
+</view>

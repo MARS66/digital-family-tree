@@ -1,0 +1,253 @@
+.summary,
+.filters,
+.queue-item__top,
+.detail-head,
+.candidate__person,
+.source,
+.check,
+.decision,
+.section-head {
+  display: flex;
+  align-items: center;
+}
+.summary {
+  margin-top: 28rpx;
+  padding: 26rpx 10rpx;
+}
+.summary > view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1rpx solid #ece7dc;
+  color: #7c827b;
+  font-size: 20rpx;
+}
+.summary > view:last-child {
+  border: 0;
+}
+.summary__number {
+  margin-bottom: 5rpx;
+  color: #26322b;
+  font-family: "Songti SC", serif;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+.summary__number.warm {
+  color: #a45c26;
+}
+.filters {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 30rpx -28rpx;
+  padding: 0 28rpx;
+}
+.filter {
+  display: inline-block;
+  margin-right: 12rpx;
+  padding: 15rpx 24rpx;
+  border-radius: 30rpx;
+  background: #e7e2d8;
+  color: #6f756f;
+  font-size: 23rpx;
+}
+.filter--active {
+  background: #315e49;
+  color: white;
+}
+.workspace > .section-title {
+  margin-bottom: 18rpx;
+}
+.queue-item {
+  margin-bottom: 14rpx;
+  padding: 24rpx;
+}
+.queue-item--active {
+  border: 2rpx solid #527962;
+  background: #f8fbf8;
+}
+.queue-item__top {
+  justify-content: space-between;
+}
+.kind {
+  color: #687169;
+  font-size: 21rpx;
+}
+.risk {
+  padding: 5rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 19rpx;
+}
+.risk--risk {
+  background: #fff0dc;
+  color: #a45c26;
+}
+.risk--safe {
+  background: #e6f0e8;
+  color: #427257;
+}
+.queue-item__title {
+  margin: 10rpx 0 7rpx;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+.queue-item > .muted {
+  font-size: 21rpx;
+}
+.review-detail {
+  margin-top: 44rpx;
+  padding-top: 38rpx;
+  border-top: 1rpx solid #d9d3c8;
+}
+.detail-head,
+.section-head {
+  justify-content: space-between;
+}
+.candidate {
+  margin-top: 22rpx;
+  padding: 28rpx;
+}
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72rpx;
+  height: 72rpx;
+  margin-right: 18rpx;
+  border-radius: 36rpx;
+  background: #e9dfc9;
+  color: #80652e;
+  font-family: "Songti SC", serif;
+  font-size: 28rpx;
+}
+.avatar.focus {
+  background: #dce9e2;
+  color: #315e49;
+}
+.candidate__name {
+  font-weight: 700;
+}
+.candidate__person .muted {
+  margin-top: 5rpx;
+  font-size: 21rpx;
+}
+.arrow {
+  margin: 17rpx 0 17rpx 34rpx;
+  color: #9a7855;
+  font-size: 28rpx;
+}
+.arrow text {
+  margin-left: 12rpx;
+  font-size: 20rpx;
+}
+.risk-box {
+  margin-top: 18rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e6c9a9;
+  border-radius: 24rpx;
+  background: #fff8ed;
+  color: #776c60;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+.risk-box__title {
+  margin-bottom: 8rpx;
+  color: #9c5728;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+.compare {
+  margin-top: 10rpx;
+  color: #9c5728;
+  font-weight: 700;
+}
+.section-head {
+  margin: 34rpx 2rpx 16rpx;
+}
+.source {
+  padding: 24rpx;
+}
+.source__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62rpx;
+  height: 62rpx;
+  margin-right: 16rpx;
+  border-radius: 18rpx;
+  background: #e4ece6;
+  color: #315e49;
+  font-weight: 700;
+}
+.source .muted {
+  margin-top: 6rpx;
+  font-size: 21rpx;
+}
+.checks {
+  margin-top: 18rpx;
+  padding: 8rpx 24rpx;
+}
+.check {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee9df;
+}
+.check:last-child {
+  border: 0;
+}
+.check > text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38rpx;
+  height: 38rpx;
+  margin-right: 15rpx;
+  border-radius: 19rpx;
+  background: #e2eee6;
+  color: #3d7553;
+  font-weight: 700;
+}
+.check.warning > text {
+  background: #fff0dc;
+  color: #a45c26;
+}
+.check .muted {
+  margin-top: 3rpx;
+  font-size: 20rpx;
+}
+.decision {
+  gap: 12rpx;
+  margin-top: 28rpx;
+}
+.decision button {
+  height: 78rpx;
+  padding: 0;
+  border-radius: 39rpx;
+  font-size: 24rpx;
+  line-height: 78rpx;
+}
+.reject {
+  flex: 0.8;
+  background: #eee9df;
+  color: #7b554e;
+}
+.revise {
+  flex: 1.1;
+  border: 1rpx solid #315e49;
+  background: transparent;
+  color: #315e49;
+}
+.approve {
+  flex: 1.2;
+  background: #315e49;
+  color: #fff;
+}
+.empty-detail {
+  margin-top: 30rpx;
+  padding: 40rpx;
+  text-align: center;
+}
+.empty-detail .muted {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+}

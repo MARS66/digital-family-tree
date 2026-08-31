@@ -15,7 +15,13 @@
 
 `id`, `wechat_openid`（按小程序唯一）、`wechat_unionid?`, `display_name?`, `avatar_media_id?`, `status`, `last_login_at`, timestamps。
 
-约束：`wechat_openid` 唯一；存在 UnionID 时建立部分唯一索引。不得把谱系字段放入 User。
+约束：`wechat_openid` 唯一；存在 UnionID 时建立部分唯一索引；`status` 为 `ACTIVE/DISABLED`。不得把谱系字段放入 User。
+
+### Session
+
+`id`, `user_id`, `access_token_hash`, `refresh_token_hash`, `access_expires_at`, `refresh_expires_at`, `last_used_at?`, `revoked_at?`, timestamps。
+
+约束：访问和刷新 token 哈希分别唯一；刷新有效期不得早于访问有效期。数据库不保存明文 token。刷新时原子撤销旧 Session 并创建新 Session，登出撤销当前 Session；User 删除时级联清理会话。
 
 ### Family
 

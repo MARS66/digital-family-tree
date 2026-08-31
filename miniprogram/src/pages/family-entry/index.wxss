@@ -1,0 +1,154 @@
+.focus-strip,
+.step,
+.unknown,
+.picker,
+.notice,
+.bottom-actions {
+  display: flex;
+  align-items: center;
+}
+.focus-strip {
+  margin-top: 28rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 24rpx;
+  background: #e3ebe5;
+}
+.mini-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68rpx;
+  height: 68rpx;
+  margin-right: 18rpx;
+  border-radius: 34rpx;
+  background: #315e49;
+  color: white;
+  font-family: "Songti SC", serif;
+  font-size: 28rpx;
+}
+.focus-strip .muted {
+  margin-top: 5rpx;
+  font-size: 21rpx;
+}
+.step {
+  align-items: flex-start;
+  margin: 40rpx 2rpx 20rpx;
+}
+.step > text {
+  margin: 4rpx 18rpx 0 0;
+  color: #a46b42;
+  font-family: serif;
+  font-size: 23rpx;
+  font-weight: 700;
+}
+.step .muted {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+}
+.role-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+.role {
+  width: calc(33.333% - 10rpx);
+  padding: 22rpx 10rpx;
+  border: 1rpx solid #ded8cd;
+  border-radius: 20rpx;
+  background: #fffdf8;
+  text-align: center;
+}
+.role--active {
+  border-color: #315e49;
+  background: #315e49;
+  color: white;
+  font-weight: 700;
+}
+.form {
+  padding: 6rpx 26rpx;
+}
+.field {
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #eee8dd;
+}
+.field:last-child {
+  border: 0;
+}
+.label {
+  margin-bottom: 14rpx;
+  color: #686f68;
+  font-size: 23rpx;
+}
+.label text {
+  margin-left: 8rpx;
+  color: #a45c26;
+  font-size: 19rpx;
+}
+.field input {
+  height: 58rpx;
+  font-size: 29rpx;
+}
+.unknown {
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee8dd;
+}
+.checkbox {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 38rpx;
+  height: 38rpx;
+  margin: 3rpx 16rpx 0 0;
+  border: 2rpx solid #bfc4be;
+  border-radius: 10rpx;
+}
+.checked {
+  border-color: #315e49;
+  background: #315e49;
+  color: white;
+}
+.unknown .muted {
+  margin-top: 5rpx;
+  font-size: 20rpx;
+}
+.picker {
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #eee8dd;
+}
+.field textarea {
+  width: 100%;
+  height: 130rpx;
+  font-size: 27rpx;
+  line-height: 1.6;
+}
+.count {
+  color: #999d97;
+  font-size: 20rpx;
+  text-align: right;
+}
+.notice {
+  align-items: flex-start;
+  margin: 28rpx 4rpx;
+  color: #7c7466;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+.notice text {
+  flex: none;
+  margin-right: 14rpx;
+  padding: 3rpx 10rpx;
+  border-radius: 10rpx;
+  background: #fff0dc;
+  color: #a45c26;
+  font-weight: 700;
+}
+.bottom-actions {
+  gap: 18rpx;
+  margin-top: 28rpx;
+}
+.bottom-actions button {
+  flex: 1;
+}

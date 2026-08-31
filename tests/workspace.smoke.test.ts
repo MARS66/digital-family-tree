@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { CONTRACTS_PACKAGE_NAME } from "../packages/contracts/src/index.js";
-import { MINIPROGRAM_RUNTIME } from "../miniprogram/src/index.js";
-import { SERVER_RUNTIME } from "../server/src/index.js";
+import { createHttpServer } from "../server/src/http/server.js";
 
 describe("workspace smoke test", () => {
-  it("loads every TypeScript workspace", () => {
+  it("loads every TypeScript workspace", async () => {
     expect(CONTRACTS_PACKAGE_NAME).toBe("@digital-family-tree/contracts");
-    expect(MINIPROGRAM_RUNTIME).toBe("wechat");
-    expect(SERVER_RUNTIME).toBe("node");
+    const server = await createHttpServer({ logger: false });
+    expect(server.hasRoute({ method: "GET", url: "/health" })).toBe(true);
+    await server.close();
   });
 });

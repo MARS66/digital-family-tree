@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --noEmit --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@digital-family-tree/contracts": "0.1.0"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^4.1.0"
   }
 }

@@ -1,0 +1,30 @@
+<view class="page detail">
+  <view class="profile card">
+    <view class="profile__top"><view class="portrait">舟</view><view class="profile__main"><view class="profile__name">张云舟</view><view class="profile__meta">男 · 1982 年生 · 浙江宁波</view><view class="profile__branch">云岫张氏 · 长房</view></view></view>
+    <view class="claim-state" wx:if="{{claimed}}"><view class="status-pill status-pill--warm">认领审核中</view><text>审核通过前不会获得本人资料管理权</text></view>
+    <button wx:else class="primary-button" bindtap="claimPerson">这是我，申请认领</button>
+  </view>
+
+  <view class="pending card" bindtap="togglePending">
+    <view class="pending__mark">待</view><view class="pending__body"><view class="pending__title">有 1 项待审核变更</view><view class="muted">“现居杭州”尚未进入正式家谱</view></view><view>{{pendingVisible ? '⌃' : '⌄'}}</view>
+  </view>
+  <view wx:if="{{pendingVisible}}" class="pending-detail"><text>现居地</text><text class="old">未填写</text><text>→</text><text class="new">浙江杭州</text></view>
+
+  <view class="section-head"><view class="section-title">家庭关系</view><view class="link" bindtap="openEntry">补充成员</view></view>
+  <view class="relations card">
+    <view class="relation-row"><view class="relation-label">父母</view><view class="relation-people"><text>张远山</text><text>林秋兰</text></view><view>›</view></view>
+    <view class="relation-row"><view class="relation-label">伴侣</view><view class="relation-people"><text>沈嘉宁</text></view><view>›</view></view>
+    <view class="relation-row"><view class="relation-label">子女</view><view class="relation-people"><text>张禾</text><text>张屿</text></view><view>›</view></view>
+  </view>
+
+  <view class="section-head"><view class="section-title">生平档案</view><view class="status-pill">正式资料</view></view>
+  <view class="facts card">
+    <view class="fact"><view class="fact__label">出生</view><view>1982 年 4 月 12 日</view></view>
+    <view class="fact"><view class="fact__label">祖籍</view><view>浙江省宁波市</view></view>
+    <view class="fact"><view class="fact__label">简介</view><view class="fact__long">家族长房第三代，现负责整理祖父张怀礼留下的旧谱与照片。</view></view>
+  </view>
+
+  <view class="section-head"><view class="section-title">资料来源</view></view>
+  <view class="source card"><view class="source__icon">谱</view><view><view>《云岫张氏家谱》1998 年修订本</view><view class="muted">第 3 卷 · 第 42 页 · 张远山提供</view></view></view>
+  <view class="actions"><button class="secondary-button" bindtap="invite">邀请本人</button><button class="secondary-button" bindtap="openEntry">建议修改</button></view>
+</view>

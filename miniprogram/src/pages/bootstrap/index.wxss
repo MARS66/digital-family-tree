@@ -1,0 +1,17 @@
+.bootstrap {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 192rpx 48rpx 48rpx;
+  text-align: center;
+}
+
+.bootstrap__title {
+  font-size: 52rpx;
+  font-weight: 600;
+}
+
+.bootstrap__message {
+  margin-top: 24rpx;
+  color: #73776f;
+  font-size: 30rpx;
+}

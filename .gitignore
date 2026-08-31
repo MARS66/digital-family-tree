@@ -24,3 +24,7 @@ tmp/
 
 # WeChat developer tools
 miniprogram_npm/
+project.private.config.json
+
+# Generated database client
+server/src/generated/prisma/

@@ -1,0 +1,166 @@
+.profile {
+  padding: 34rpx;
+}
+.profile__top,
+.claim-state,
+.pending,
+.section-head,
+.relation-row,
+.fact,
+.source,
+.actions {
+  display: flex;
+  align-items: center;
+}
+.portrait {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 126rpx;
+  height: 126rpx;
+  border-radius: 63rpx;
+  background: linear-gradient(145deg, #dce8df, #c6d8cc);
+  color: #315e49;
+  font-family: "Songti SC", serif;
+  font-size: 52rpx;
+}
+.profile__main {
+  margin-left: 26rpx;
+}
+.profile__name {
+  font-family: "Songti SC", serif;
+  font-size: 42rpx;
+  font-weight: 700;
+}
+.profile__meta,
+.profile__branch {
+  margin-top: 8rpx;
+  color: #747b74;
+  font-size: 23rpx;
+}
+.profile .primary-button {
+  margin-top: 30rpx;
+}
+.claim-state {
+  justify-content: space-between;
+  margin-top: 28rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #ece6dc;
+  color: #858a84;
+  font-size: 20rpx;
+}
+.pending {
+  margin-top: 20rpx;
+  padding: 24rpx;
+}
+.pending__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 66rpx;
+  height: 66rpx;
+  border-radius: 20rpx;
+  background: #fff0dc;
+  color: #a45c26;
+  font-weight: 700;
+}
+.pending__body {
+  flex: 1;
+  margin-left: 18rpx;
+}
+.pending__title {
+  font-weight: 700;
+}
+.pending__body .muted {
+  margin-top: 5rpx;
+  font-size: 21rpx;
+}
+.pending-detail {
+  display: flex;
+  gap: 14rpx;
+  margin: 10rpx 18rpx 0;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #fffaf1;
+  font-size: 22rpx;
+}
+.pending-detail .old {
+  color: #92968f;
+  text-decoration: line-through;
+}
+.pending-detail .new {
+  color: #a45c26;
+  font-weight: 700;
+}
+.section-head {
+  justify-content: space-between;
+  margin: 40rpx 4rpx 18rpx;
+}
+.link {
+  color: #315e49;
+  font-size: 24rpx;
+}
+.relations,
+.facts {
+  padding: 0 26rpx;
+}
+.relation-row {
+  min-height: 102rpx;
+  border-bottom: 1rpx solid #eee9df;
+}
+.relation-row:last-child {
+  border: 0;
+}
+.relation-label {
+  width: 92rpx;
+  color: #7d827c;
+}
+.relation-people {
+  display: flex;
+  flex: 1;
+  gap: 28rpx;
+  font-weight: 600;
+}
+.fact {
+  align-items: flex-start;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #eee9df;
+}
+.fact:last-child {
+  border: 0;
+}
+.fact__label {
+  flex: none;
+  width: 100rpx;
+  color: #7d827c;
+}
+.fact__long {
+  line-height: 1.7;
+}
+.source {
+  padding: 26rpx;
+}
+.source__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70rpx;
+  height: 70rpx;
+  margin-right: 18rpx;
+  border-radius: 18rpx;
+  background: #eee5d2;
+  color: #89672f;
+  font-family: "Songti SC", serif;
+  font-weight: 700;
+}
+.source .muted {
+  margin-top: 6rpx;
+  font-size: 21rpx;
+}
+.actions {
+  gap: 18rpx;
+  margin-top: 32rpx;
+}
+.actions button {
+  flex: 1;
+}

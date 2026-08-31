@@ -1,0 +1,58 @@
+<view class="page home">
+  <view class="home__header">
+    <view>
+      <view class="eyebrow">当前家族</view>
+      <view class="page-title">{{familyName}}</view>
+    </view>
+    <button class="switch" bindtap="switchFamily">切换⌄</button>
+  </view>
+
+  <view class="hero card">
+    <view class="hero__seal">张</view>
+    <view class="hero__content">
+      <view class="hero__label">家族档案正在生长</view>
+      <view class="hero__title">把记忆连成一棵树</view>
+      <view class="hero__desc">已有 4 个分支共同维护，最近一次更新于今天 09:42</view>
+    </view>
+  </view>
+
+  <view class="stats card">
+    <view class="stat"><text class="stat__value">{{members}}</text><text class="stat__label">人物</text></view>
+    <view class="stat"><text class="stat__value">{{relationships}}</text><text class="stat__label">关系</text></view>
+    <view class="stat"><text class="stat__value">{{reviewedThisMonth}}</text><text class="stat__label">本月新增</text></view>
+  </view>
+
+  <view class="section-head">
+    <view class="section-title">从我开始看</view>
+    <view class="section-link" bindtap="openTree">打开家谱 →</view>
+  </view>
+  <view class="focus-card card" bindtap="openTree">
+    <view class="avatar">舟</view>
+    <view class="focus-card__main">
+      <view class="focus-card__name">张云舟 <text class="me">我</text></view>
+      <view class="muted">父母 2 · 伴侣 1 · 子女 2</view>
+    </view>
+    <view class="chevron">›</view>
+  </view>
+
+  <view class="section-head"><view class="section-title">下一步</view><view class="muted">让家谱更完整</view></view>
+  <view class="task card" bindtap="openEntry">
+    <view class="task__icon">＋</view>
+    <view class="task__body"><view class="task__title">补录一个家庭单元</view><view class="muted">为张云舟补充父母、伴侣或子女</view></view>
+    <view class="chevron">›</view>
+  </view>
+  <view class="task card" bindtap="openReview">
+    <view class="task__icon task__icon--warm">审</view>
+    <view class="task__body"><view class="task__title">5 项共建等待审核</view><view class="muted">其中 1 项存在重复风险</view></view>
+    <view class="chevron">›</view>
+  </view>
+
+  <view class="recent">
+    <view class="section-title">最近完善</view>
+    <view class="recent__row" bindtap="openPerson">
+      <view class="avatar avatar--small">兰</view>
+      <view class="recent__copy"><view>张蕙兰的生平资料</view><view class="muted">由 张云舟 提交 · 已审核</view></view>
+      <view class="status-pill">正式资料</view>
+    </view>
+  </view>
+</view>

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node", "vitest/globals"]
   },
-  "include": ["tests/**/*.ts"]
+  "include": ["database/**/*.ts", "prisma.config.ts", "tests/**/*.ts"]
 }
