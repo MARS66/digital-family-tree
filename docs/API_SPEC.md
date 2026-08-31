@@ -43,7 +43,8 @@
 - `POST /families/:familyId/contributions/:id/relationships`：添加亲子候选 `{ parentId, childId, parentRole, sourceId? }`。
 - `DELETE /families/:familyId/contributions/:id/relationships/:relationshipId`：提出删除。
 - `POST /families/:familyId/contributions/:id/unions`：伴侣候选 `{ person1Id, person2Id, unionType, dates?, sourceId? }`。
-- `GET /families/:familyId/persons/:personId/relations`：经权限过滤的直接和推导关系。
+- `GET /api/v1/families/:familyId/persons/:personId/relations`：T013 已实现成员范围的父母、子女与推导兄弟姐妹读取；兄弟姐妹返回 `FULL/HALF/UNKNOWN` 和共享父母 ID。
+- T013 的 PARENT_OF 创建由带 Family 事务锁和循环检测的领域服务提供；公开写入口仍由后续 Contribution/Review 路由接入，不允许直接覆盖正式事实。
 
 ## 6. Claim
 

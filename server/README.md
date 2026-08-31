@@ -35,6 +35,13 @@ npm run dev:server
 - Person 领域层提供带 Family 限定、管理员校验、版本冲突和软删除审计上下文的 CRUD。
 - T012 不开放 Person 直写 HTTP API；创建由 T020 组合流程接入，修改和删除由 T030–T032 的贡献审核流程接入。
 
+## 亲子关系
+
+- 只存 `PARENT_OF` 直接事实；`GET /api/v1/families/:familyId/persons/:personId/relations` 双向返回父母和子女，并推导兄弟姐妹。
+- 关系写入领域服务按 Family 加事务锁，阻止自环、重复、父母角色冲突和祖先循环；两端必须是同一 Family 的有效 Person。
+- 兄弟姐妹分为 `FULL/HALF/UNKNOWN`，不会把资料缺失错误解释为半同胞。
+- 存在活跃关系的 Person 不能软删除。T013 不开放绕过 Contribution/Review 的关系写 HTTP API。
+
 ## API 基础协议
 
 - 成功响应：`{ "data": ..., "meta"?: ... }`

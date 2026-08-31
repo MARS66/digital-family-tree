@@ -327,25 +327,51 @@ export class PersonService {
     expectedVersion: number,
   ): Promise<void> {
     await this.requireFamilyAccess(actorUserId, familyId, true);
-    const current = await this.findVisiblePerson(familyId, personId);
-    if (current.version !== expectedVersion) this.versionConflict(current);
-
-    const deleted = await this.database.person.updateMany({
-      where: {
-        id: personId,
+    await this.database.$transaction(async (transaction) => {
+      await transaction.$executeRawUnsafe(
+        "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
         familyId,
-        version: expectedVersion,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-        deletedBy: actorUserId,
-        version: { increment: 1 },
-      },
+      );
+      const current = await transaction.person.findFirst({
+        where: { id: personId, familyId, deletedAt: null },
+      });
+      if (!current) {
+        throw new ApiError(404, "PERSON_NOT_FOUND", "人物不存在或无权访问");
+      }
+      if (current.version !== expectedVersion) this.versionConflict(current);
+      const activeRelationships = await transaction.relationship.count({
+        where: {
+          familyId,
+          status: "ACTIVE",
+          deletedAt: null,
+          OR: [{ fromPersonId: personId }, { toPersonId: personId }],
+        },
+      });
+      if (activeRelationships > 0) {
+        throw new ApiError(
+          409,
+          "PERSON_HAS_ACTIVE_RELATIONSHIPS",
+          "人物存在有效关系，不能直接删除",
+        );
+      }
+
+      const deleted = await transaction.person.updateMany({
+        where: {
+          id: personId,
+          familyId,
+          version: expectedVersion,
+          deletedAt: null,
+        },
+        data: {
+          deletedAt: new Date(),
+          deletedBy: actorUserId,
+          version: { increment: 1 },
+        },
+      });
+      if (deleted.count !== 1) {
+        throw new ApiError(409, "PERSON_VERSION_CONFLICT", "人物资料已被修改");
+      }
     });
-    if (deleted.count !== 1) {
-      throw new ApiError(409, "PERSON_VERSION_CONFLICT", "人物资料已被修改");
-    }
   }
 
   private async requireFamilyAccess(
